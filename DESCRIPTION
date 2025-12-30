@@ -1,0 +1,34 @@
+Package: BayesAiken
+Type: Package
+Title: Bayesian Content Validity Coefficients with Credibility Intervals
+Version: 1.0.0
+Date: 2024-12-30
+Authors@R: person("Jose", "Ventura-Leon",
+                  email = "jventuraleon@gmail.com",
+                  role = c("aut", "cre"),
+                  comment = c(ORCID = "0000-0003-2996-4244"))
+Description: Calculates Bayesian credibility intervals for content validity
+    coefficients including Aiken's V, H (Homogeneity), R (Reproducibility),
+    C (Consensus), A (Judge Agreement), and I (Inter-item Consistency).
+    Uses Beta-Binomial conjugate model for inference. Provides both classical
+    and Bayesian estimates, HDI and ETI credibility intervals, posterior
+    probabilities of exceeding thresholds (0.70, 0.80), and publication-ready
+    visualizations. Supports both vector input for single items and data.frame
+    input for multiple items with multiple criteria.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+Depends:
+    R (>= 4.0.0)
+Imports:
+    stats,
+    graphics,
+    grDevices
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+URL: https://github.com/jventural/BayesAiken
+BugReports: https://github.com/jventural/BayesAiken/issues
