@@ -9,17 +9,22 @@
 # Fecha: 2024-12-30
 # =============================================================================
 
-# Cargar la libreria (usar uno de estos metodos)
-# Opcion 1: Si esta instalada
-# library(BayesAiken)
+# =============================================================================
+# PASO 0: INSTALACION DE LA LIBRERIA
+# =============================================================================
+# Primero instalar devtools si no lo tienes
+# install.packages("devtools")
 
-# Opcion 2: Cargar archivos fuente directamente
-# setwd("D:/14. LIBRERIAS/BayesAiken")
-# source("R/utils.R")
-# source("R/coefficients.R")
-# source("R/bayes_aiken.R")
-# source("R/plots.R")
-# source("R/export.R")
+# Instalar BayesAiken desde la ruta local
+# devtools::install("D:/14. LIBRERIAS/BayesAiken")
+
+# O si esta en GitHub:
+# devtools::install_github("jventural/BayesAiken")
+
+# =============================================================================
+# PASO 1: CARGAR LA LIBRERIA
+# =============================================================================
+library(BayesAiken)
 
 # =============================================================================
 # SECCION 1: DATOS DE EJEMPLO
@@ -197,8 +202,8 @@ cat("================================================================\n")
 cat("  SECCION 9: VISUALIZACION DE RESULTADOS\n")
 cat("================================================================\n")
 
-# Grafico de la distribucion posterior para V
-cat("\nGenerando grafico de distribucion posterior...\n")
+# Grafico de la distribucion posterior para V (individual)
+cat("\n9.1 Grafico de distribucion posterior individual:\n")
 plot_posterior(resultado_V$post_alpha, resultado_V$post_beta,
                coef = "V",
                prior_alpha = 1, prior_beta = 1,
@@ -206,6 +211,29 @@ plot_posterior(resultado_V$post_alpha, resultado_V$post_beta,
                show_prior = TRUE,
                show_hdi = TRUE,
                main = "Distribucion Posterior - V de Aiken (Item 1)")
+
+# Grafico de multiples items en un panel
+cat("\n9.2 Panel de multiples items (20 items simulados):\n")
+
+# Crear datos simulados para 20 items
+set.seed(2024)
+items_simulados <- lapply(1:20, function(i) {
+  # Simular diferentes niveles de validez
+  post_alpha <- sample(18:32, 1)  # Variacion en exitos
+
+  post_beta <- sample(2:6, 1)     # Variacion en fracasos
+  list(
+    post_alpha = post_alpha,
+    post_beta = post_beta,
+    item_name = paste0("Item ", i)
+  )
+})
+
+# Generar panel de 20 items (4 filas x 5 columnas)
+plot_multiple_posteriors(items_simulados,
+                         n_cols = 5,
+                         main_title = "Distribucion Posterior por Item (Items 1-20)",
+                         coef = "V")
 
 # =============================================================================
 # SECCION 10: EXPORTACION DE RESULTADOS

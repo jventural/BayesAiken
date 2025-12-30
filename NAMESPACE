@@ -46,6 +46,7 @@ export(export_to_csv)
 export(plot_posterior)
 export(plot_all_coefficients)
 export(plot_comparison)
+export(plot_multiple_posteriors)
 
 # =============================================================================
 # UTILIDADES
@@ -65,5 +66,5 @@ S3method(plot, bayes_aiken)
 # IMPORTS
 # =============================================================================
 importFrom(stats, dbeta, pbeta, qbeta, rbeta, var, optimize, qnorm)
-importFrom(graphics, plot, lines, polygon, abline, legend, par, mtext, axis, text)
+importFrom(graphics, plot, lines, polygon, abline, legend, par, mtext, axis, text, segments, grid)
 importFrom(grDevices, rgb, pdf, dev.off)
