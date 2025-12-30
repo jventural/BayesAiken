@@ -215,24 +215,19 @@ plot_posterior(resultado_V$post_alpha, resultado_V$post_beta,
 # Grafico de multiples items en un panel
 cat("\n9.2 Panel de multiples items (20 items simulados):\n")
 
-# Crear datos simulados para 20 items
-set.seed(2024)
-items_simulados <- lapply(1:20, function(i) {
-  # Simular diferentes niveles de validez
-  post_alpha <- sample(18:32, 1)  # Variacion en exitos
-
-  post_beta <- sample(2:6, 1)     # Variacion en fracasos
+# Crear datos para 20 items
+items_data <- lapply(1:20, function(i) {
   list(
-    post_alpha = post_alpha,
-    post_beta = post_beta,
+    post_alpha = 25 + sample(-5:10, 1),
+    post_beta = 3 + sample(0:3, 1),
     item_name = paste0("Item ", i)
   )
 })
 
-# Generar panel de 20 items (4 filas x 5 columnas)
-plot_multiple_posteriors(items_simulados,
+# Panel de 4 filas x 5 columnas
+plot_multiple_posteriors(items_data,
                          n_cols = 5,
-                         main_title = "Distribucion Posterior por Item (Items 1-20)",
+                         main_title = "Posterior Distributions - Items 1-20",
                          coef = "V")
 
 # =============================================================================
