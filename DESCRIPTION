@@ -1,24 +1,28 @@
 Package: BayesAiken
 Type: Package
-Title: Bayesian Content Validity Coefficients with Credibility Intervals
-Version: 1.0.0
-Date: 2024-12-30
+Title: Bayesian Aiken's V Coefficient with Dirichlet-Multinomial Model
+Version: 0.1.0
+Date: 2025-01-09
 Authors@R: person("Jose", "Ventura-Leon",
                   email = "jventuraleon@gmail.com",
                   role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0003-2996-4244"))
-Description: Calculates Bayesian credibility intervals for content validity
-    coefficients including Aiken's V, H (Homogeneity), R (Reproducibility),
-    C (Consensus), A (Judge Agreement), and I (Inter-item Consistency).
-    Uses Beta-Binomial conjugate model for inference. Provides both classical
-    and Bayesian estimates, HDI and ETI credibility intervals, posterior
-    probabilities of exceeding thresholds (0.70, 0.80), and publication-ready
-    visualizations. Supports both vector input for single items and data.frame
-    input for multiple items with multiple criteria.
+Author: Jose Ventura-Leon [aut, cre] (<https://orcid.org/0000-0003-2996-4244>)
+Maintainer: Jose Ventura-Leon <jventuraleon@gmail.com>
+Description: Calculates Bayesian credible intervals for Aiken's V coefficient
+    using two models: Beta-Binomial (standard) and Dirichlet-Multinomial
+    (conservative, recommended for small panels). The Dirichlet-Multinomial
+    approach treats each judge as a single observation rather than inflating
+    effective sample size, producing wider and more honest intervals when
+    expert panels are small (n < 10). Provides posterior means, HDI and ETI
+    credible intervals, threshold exceedance probabilities P(V > 0.70),
+    and publication-ready visualizations comparing both models.
+    Based on Ventura-Leon (2025) "A Dirichlet-Multinomial Framework for
+    Bayesian Aiken's V in Content Validity Studies with Small Expert Panels".
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends:
     R (>= 4.0.0)
 Imports:
