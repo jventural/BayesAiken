@@ -93,8 +93,7 @@ V_aiken(c(0, 0, 1, 4), l = 0, s = 3, input_type = "counts")
 If you use this package, please cite:
 
 ```
-Ventura-León, J. (2025). A Dirichlet-Multinomial Framework for Bayesian
-Aiken's V in Content Validity Studies with Small Expert Panels.
+Ventura-León, J. (2026). BayesAiken [Software]. GitHub. https://github.com/jventural/BayesAiken
 ```
 
 ## References
