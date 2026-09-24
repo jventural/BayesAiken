@@ -5,3 +5,4 @@
 ^CRAN-SUBMISSION$
 ^.*\.Rcheck$
 ^Rplots\.pdf$
+^README\.md$
