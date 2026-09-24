@@ -141,9 +141,8 @@ plot_posterior <- function(post_alpha, post_beta, coef = "V",
   # Posterior
   lines(x, posterior, col = "steelblue", lwd = 3)
 
-  # Lineas de referencia (thresholds)
+  # Linea de referencia (threshold)
   abline(v = 0.70, col = "darkorange", lty = 2, lwd = 2)
-  abline(v = 0.80, col = "firebrick", lty = 2, lwd = 2)
 
   # Media posterior
   abline(v = mean_post, col = "steelblue", lty = 3, lwd = 2)
@@ -171,9 +170,6 @@ plot_posterior <- function(post_alpha, post_beta, coef = "V",
     text(text_x, text_y - y_max * 0.16,
          sprintf("P(%s > 0.70) = %.3f", coef, prob_70),
          adj = c(0, 1), cex = 0.85, col = "darkorange")
-    text(text_x, text_y - y_max * 0.24,
-         sprintf("P(%s > 0.80) = %.3f", coef, prob_80),
-         adj = c(0, 1), cex = 0.85, col = "firebrick")
 
     # Leyenda FUERA del grafico (a la derecha)
     legend_x <- 1.02
@@ -184,14 +180,13 @@ plot_posterior <- function(post_alpha, post_beta, coef = "V",
              paste0("Posterior Beta(", round(post_alpha, 1), ", ", round(post_beta, 1), ")"),
              paste0("Mean = ", round(mean_post, 3)),
              paste0(round(cred_level * 100), "% HDI"),
-             "Threshold 0.70",
-             "Threshold 0.80"
+             "Threshold 0.70"
            ),
-           col = c("steelblue", "steelblue", rgb(0.27, 0.51, 0.71, 0.5), "darkorange", "firebrick"),
-           lty = c(1, 3, NA, 2, 2),
-           lwd = c(3, 2, NA, 2, 2),
-           pch = c(NA, NA, 15, NA, NA),
-           pt.cex = c(NA, NA, 2, NA, NA),
+           col = c("steelblue", "steelblue", rgb(0.27, 0.51, 0.71, 0.5), "darkorange"),
+           lty = c(1, 3, NA, 2),
+           lwd = c(3, 2, NA, 2),
+           pch = c(NA, NA, 15, NA),
+           pt.cex = c(NA, NA, 2, NA),
            bty = "n",
            cex = 0.75,
            xpd = TRUE)
@@ -323,7 +318,7 @@ plot_multiple_posteriors <- function(results_list,
   mtext(main_title, outer = TRUE, line = 1, cex = 1.2, font = 2)
 
   # Leyenda global en el margen inferior
-  mtext("Orange line = 0.70 threshold | Red line = 0.80 threshold | Blue area = HDI",
+  mtext("Orange line = 0.70 threshold | Blue area = HDI",
         outer = TRUE, side = 1, line = 0.5, cex = 0.8, col = "gray40")
 
   invisible(NULL)
@@ -372,11 +367,11 @@ plot_multiple_posteriors <- function(results_list,
        xaxt = "n")
 
   # Eje X simplificado
-  axis(1, at = c(0, 0.5, 0.7, 0.8, 1), labels = c("0", ".5", ".7", ".8", "1"), cex.axis = 0.7)
+  axis(1, at = c(0, 0.5, 0.7, 1), labels = c("0", ".5", ".7", "1"), cex.axis = 0.7)
 
   # Grid
   abline(h = seq(0, y_max, length.out = 5), col = "gray95", lty = 1)
-  abline(v = c(0.5, 0.7, 0.8), col = "gray90", lty = 1)
+  abline(v = c(0.5, 0.7), col = "gray90", lty = 1)
 
   # HDI shading
   x_hdi <- x[x >= hdi[1] & x <= hdi[2]]
@@ -391,9 +386,8 @@ plot_multiple_posteriors <- function(results_list,
   # Posterior
   lines(x, posterior, col = "steelblue", lwd = 2)
 
-  # Lineas de referencia
+  # Linea de referencia
   abline(v = 0.70, col = "darkorange", lty = 2, lwd = 1.5)
-  abline(v = 0.80, col = "firebrick", lty = 2, lwd = 1.5)
 
   # Media
   abline(v = mean_post, col = "steelblue", lty = 3, lwd = 1.5)
@@ -536,18 +530,17 @@ plot_comparison <- function(x, coef = NULL, order_by = "none") {
   segments(data[[ci_lower]], y_pos, data[[ci_upper]], y_pos,
            col = colors, lwd = 2)
 
-  # Lineas de referencia
+  # Linea de referencia
   abline(v = 0.70, col = "darkorange", lty = 2, lwd = 2)
-  abline(v = 0.80, col = "firebrick", lty = 2, lwd = 2)
 
   # Leyenda FUERA del grafico (a la derecha)
   legend(1.02, n_items * 0.8,
          legend = c("P(>0.70) > 95%", "P(>0.70) 80-95%", "P(>0.70) < 80%",
-                    "Threshold 0.70", "Threshold 0.80"),
-         col = c("forestgreen", "darkorange", "firebrick", "darkorange", "firebrick"),
-         pch = c(19, 19, 19, NA, NA),
-         lty = c(NA, NA, NA, 2, 2),
-         lwd = c(NA, NA, NA, 2, 2),
+                    "Threshold 0.70"),
+         col = c("forestgreen", "darkorange", "firebrick", "darkorange"),
+         pch = c(19, 19, 19, NA),
+         lty = c(NA, NA, NA, 2),
+         lwd = c(NA, NA, NA, 2),
          bty = "n",
          cex = 0.8,
          xpd = TRUE)
@@ -579,4 +572,347 @@ plot_comparison <- function(x, coef = NULL, order_by = "none") {
     coef = coef,
     cred_level = cred_level
   )
+}
+
+
+# =============================================================================
+# FUNCIONES DE PLOT SEPARADAS PARA CADA MODELO
+# =============================================================================
+
+#' Graficar densidad posterior del modelo Beta-Binomial
+#'
+#' Genera un grafico de la distribucion posterior de V usando el modelo
+#' Beta-Binomial estandar.
+#'
+#' @param ratings Vector de calificaciones de los jueces
+#' @param l Valor minimo de la escala (default = 0)
+#' @param s Valor maximo de la escala (default = 3)
+#' @param prior_alpha Parametro alpha del prior Beta (default = 1)
+#' @param prior_beta Parametro beta del prior Beta (default = 1)
+#' @param cred_level Nivel de credibilidad (default = 0.95)
+#' @param threshold Umbral de referencia (default = 0.70)
+#' @param main Titulo del grafico (opcional)
+#' @param col Color de la densidad (default = "steelblue")
+#' @param show_prior Mostrar distribucion prior (default = TRUE)
+#' @param show_hdi Mostrar region HDI sombreada (default = TRUE)
+#'
+#' @return Invisible: lista con parametros de la posterior
+#'
+#' @examples
+#' ratings <- c(3, 3, 2, 3, 3)
+#' plot_V_beta_binomial(ratings, l = 0, s = 3)
+#'
+#' @export
+plot_V_beta_binomial <- function(ratings, l = 0, s = 3,
+                                  prior_alpha = 1, prior_beta = 1,
+                                  cred_level = 0.95,
+                                  threshold = 0.70,
+                                  main = NULL,
+                                  col = "steelblue",
+                                  show_prior = TRUE,
+                                  show_hdi = TRUE) {
+
+  # Calcular parametros
+  ratings <- ratings[!is.na(ratings)]
+  n <- length(ratings)
+  k <- s - l
+
+  # Exitos y fracasos
+  sum_success <- sum(ratings - l)
+  total_trials <- n * k
+
+  # Posterior Beta
+  post_alpha <- prior_alpha + sum_success
+  post_beta <- prior_beta + (total_trials - sum_success)
+
+  # Estadisticos
+  V_mean <- post_alpha / (post_alpha + post_beta)
+  V_classic <- (mean(ratings) - l) / k
+  hdi <- compute_hdi(post_alpha, post_beta, cred_level)
+  prob_threshold <- 1 - pbeta(threshold, post_alpha, post_beta)
+
+  # Titulo
+
+  if (is.null(main)) {
+    main <- sprintf("Posterior Beta-Binomial (n = %d jueces)", n)
+  }
+
+  # Secuencia de valores
+  x <- seq(0.001, 0.999, length.out = 500)
+  y <- dbeta(x, post_alpha, post_beta)
+
+  # Configurar grafico
+  old_par <- par(mar = c(5, 5, 4, 2))
+  on.exit(par(old_par))
+
+  y_max <- max(y) * 1.15
+
+  # Plot base
+  plot(x, y, type = "n",
+       xlim = c(0, 1), ylim = c(0, y_max),
+       xlab = "V de Aiken",
+       ylab = "Densidad posterior",
+       main = main,
+       cex.lab = 1.1, cex.axis = 1, cex.main = 1.2,
+       las = 1)
+
+  # Grid
+  grid(col = "gray90", lty = 1)
+
+  # Prior (escalado)
+  if (show_prior) {
+    y_prior <- dbeta(x, prior_alpha, prior_beta)
+    if (max(y_prior) > 0 && is.finite(max(y_prior))) {
+      y_prior_scaled <- y_prior * (y_max * 0.25) / max(y_prior)
+      lines(x, y_prior_scaled, col = "gray60", lwd = 2, lty = 2)
+    }
+  }
+
+  # HDI shading
+  if (show_hdi) {
+    x_hdi <- x[x >= hdi[1] & x <= hdi[2]]
+    y_hdi <- dbeta(x_hdi, post_alpha, post_beta)
+    if (length(x_hdi) > 0) {
+      polygon(c(x_hdi[1], x_hdi, x_hdi[length(x_hdi)]),
+              c(0, y_hdi, 0),
+              col = adjustcolor(col, alpha.f = 0.3),
+              border = NA)
+    }
+  }
+
+  # Densidad posterior
+  lines(x, y, col = col, lwd = 3)
+
+  # Lineas de referencia
+  abline(v = threshold, col = "darkorange", lty = 2, lwd = 2)
+  abline(v = V_mean, col = col, lty = 3, lwd = 2)
+  abline(v = V_classic, col = "gray40", lty = 4, lwd = 1.5)
+
+  # Texto con estadisticos
+  text(0.02, y_max * 0.95,
+       sprintf("V clasica = %.3f", V_classic),
+       adj = c(0, 1), cex = 0.9, col = "gray40")
+  text(0.02, y_max * 0.87,
+       sprintf("V posterior = %.3f", V_mean),
+       adj = c(0, 1), cex = 0.9, font = 2, col = col)
+  text(0.02, y_max * 0.79,
+       sprintf("%.0f%% HDI: [%.3f, %.3f]", cred_level * 100, hdi[1], hdi[2]),
+       adj = c(0, 1), cex = 0.85, col = "gray30")
+  text(0.02, y_max * 0.71,
+       sprintf("P(V > %.2f) = %.3f", threshold, prob_threshold),
+       adj = c(0, 1), cex = 0.9, font = 2, col = "darkorange")
+
+  # Leyenda
+  legend("topright",
+         legend = c(
+           sprintf("Posterior Beta(%.1f, %.1f)", post_alpha, post_beta),
+           sprintf("%.0f%% HDI", cred_level * 100),
+           sprintf("Umbral %.2f", threshold),
+           if (show_prior) sprintf("Prior Beta(%.0f, %.0f)", prior_alpha, prior_beta) else NULL
+         ),
+         col = c(col, adjustcolor(col, 0.5), "darkorange", if (show_prior) "gray60" else NULL),
+         lty = c(1, NA, 2, if (show_prior) 2 else NULL),
+         lwd = c(3, NA, 2, if (show_prior) 2 else NULL),
+         pch = c(NA, 15, NA, NA),
+         pt.cex = c(NA, 2, NA, NA),
+         bty = "n", cex = 0.8)
+
+  # Retornar parametros
+  invisible(list(
+    modelo = "Beta-Binomial",
+    n_jueces = n,
+    V_clasica = V_classic,
+    V_posterior = V_mean,
+    post_alpha = post_alpha,
+    post_beta = post_beta,
+    HDI = hdi,
+    prob_threshold = prob_threshold
+  ))
+}
+
+
+#' Graficar densidad posterior del modelo Dirichlet-Multinomial
+#'
+#' Genera un grafico de la distribucion posterior de V usando el modelo
+#' Dirichlet-Multinomial (mas conservador que Beta-Binomial).
+#'
+#' @param ratings Vector de calificaciones de los jueces
+#' @param l Valor minimo de la escala (default = 0)
+#' @param s Valor maximo de la escala (default = 3)
+#' @param prior_alpha Parametro alpha del prior Dirichlet (default = 1, uniforme)
+#' @param cred_level Nivel de credibilidad (default = 0.95)
+#' @param n_samples Numero de muestras Monte Carlo (default = 10000)
+#' @param threshold Umbral de referencia (default = 0.70)
+#' @param main Titulo del grafico (opcional)
+#' @param col Color de la densidad (default = "coral")
+#' @param show_prior Mostrar distribucion prior (default = FALSE)
+#' @param show_hdi Mostrar region HDI sombreada (default = TRUE)
+#' @param seed Semilla para reproducibilidad (default = NULL)
+#'
+#' @return Invisible: lista con parametros y muestras de la posterior
+#'
+#' @details
+#' El modelo Dirichlet-Multinomial modela directamente las frecuencias
+#' de cada categoria, produciendo intervalos mas amplios y conservadores
+#' que el modelo Beta-Binomial, especialmente con muestras pequenas.
+#'
+#' @examples
+#' ratings <- c(3, 3, 2, 3, 3)
+#' plot_V_dirichlet(ratings, l = 0, s = 3)
+#'
+#' @export
+plot_V_dirichlet <- function(ratings, l = 0, s = 3,
+                              prior_alpha = 1,
+                              cred_level = 0.95,
+                              n_samples = 10000,
+                              threshold = 0.70,
+                              main = NULL,
+                              col = "coral",
+                              show_prior = FALSE,
+                              show_hdi = TRUE,
+                              seed = 42) {
+
+  # Calcular parametros
+  ratings <- ratings[!is.na(ratings)]
+  n <- length(ratings)
+  k <- s - l
+  n_categories <- k + 1
+
+  # V clasica
+  V_classic <- (mean(ratings) - l) / k
+
+  # Contar frecuencias
+  ratings_idx <- ratings - l
+  counts <- tabulate(ratings_idx + 1, nbins = n_categories)
+
+  # Prior y posterior Dirichlet
+  if (length(prior_alpha) == 1) {
+    prior_alpha_vec <- rep(prior_alpha, n_categories)
+  } else {
+    prior_alpha_vec <- prior_alpha
+  }
+  post_alpha_vec <- prior_alpha_vec + counts
+
+  # Simulacion Monte Carlo
+  if (!is.null(seed)) set.seed(seed)
+
+  V_samples <- numeric(n_samples)
+  category_values <- 0:k
+
+  for (i in 1:n_samples) {
+    gamma_samples <- rgamma(n_categories, shape = post_alpha_vec, rate = 1)
+    pi_samples <- gamma_samples / sum(gamma_samples)
+    V_samples[i] <- sum(pi_samples * category_values) / k
+  }
+
+  # Estadisticos
+  V_mean <- mean(V_samples)
+  V_median <- median(V_samples)
+  V_sd <- sd(V_samples)
+
+  # HDI
+  sorted_samples <- sort(V_samples)
+  ci_mass <- floor(cred_level * n_samples)
+  n_cis <- n_samples - ci_mass
+  ci_widths <- sorted_samples[(ci_mass + 1):n_samples] - sorted_samples[1:n_cis]
+  best_ci_idx <- which.min(ci_widths)
+  hdi <- c(sorted_samples[best_ci_idx], sorted_samples[best_ci_idx + ci_mass])
+
+  # P(V > threshold)
+  prob_threshold <- mean(V_samples > threshold)
+
+  # Titulo
+  if (is.null(main)) {
+    main <- sprintf("Posterior Dirichlet-Multinomial (n = %d jueces)", n)
+  }
+
+  # Densidad via kernel
+  dens <- density(V_samples, from = 0, to = 1, n = 512)
+
+  # Configurar grafico
+  old_par <- par(mar = c(5, 5, 4, 2))
+  on.exit(par(old_par))
+
+  y_max <- max(dens$y) * 1.15
+
+  # Plot base
+  plot(dens$x, dens$y, type = "n",
+       xlim = c(0, 1), ylim = c(0, y_max),
+       xlab = "V de Aiken",
+       ylab = "Densidad posterior",
+       main = main,
+       cex.lab = 1.1, cex.axis = 1, cex.main = 1.2,
+       las = 1)
+
+  # Grid
+  grid(col = "gray90", lty = 1)
+
+  # HDI shading
+  if (show_hdi) {
+    x_hdi <- dens$x[dens$x >= hdi[1] & dens$x <= hdi[2]]
+    y_hdi <- dens$y[dens$x >= hdi[1] & dens$x <= hdi[2]]
+    if (length(x_hdi) > 0) {
+      polygon(c(x_hdi[1], x_hdi, x_hdi[length(x_hdi)]),
+              c(0, y_hdi, 0),
+              col = adjustcolor(col, alpha.f = 0.3),
+              border = NA)
+    }
+  }
+
+  # Densidad posterior
+  lines(dens$x, dens$y, col = col, lwd = 3)
+
+  # Lineas de referencia
+  abline(v = threshold, col = "darkorange", lty = 2, lwd = 2)
+  abline(v = V_mean, col = col, lty = 3, lwd = 2)
+  abline(v = V_classic, col = "gray40", lty = 4, lwd = 1.5)
+
+  # Texto con estadisticos
+  text(0.02, y_max * 0.95,
+       sprintf("V clasica = %.3f", V_classic),
+       adj = c(0, 1), cex = 0.9, col = "gray40")
+  text(0.02, y_max * 0.87,
+       sprintf("V posterior = %.3f (SD = %.3f)", V_mean, V_sd),
+       adj = c(0, 1), cex = 0.9, font = 2, col = col)
+  text(0.02, y_max * 0.79,
+       sprintf("%.0f%% HDI: [%.3f, %.3f]", cred_level * 100, hdi[1], hdi[2]),
+       adj = c(0, 1), cex = 0.85, col = "gray30")
+  text(0.02, y_max * 0.71,
+       sprintf("P(V > %.2f) = %.3f", threshold, prob_threshold),
+       adj = c(0, 1), cex = 0.9, font = 2, col = "darkorange")
+
+  # Frecuencias observadas
+  freq_text <- paste0("n = (", paste(counts, collapse = ", "), ")")
+  text(0.02, y_max * 0.60,
+       sprintf("Frecuencias: %s", freq_text),
+       adj = c(0, 1), cex = 0.8, col = "gray50")
+
+  # Leyenda
+  legend("topright",
+         legend = c(
+           "Posterior Dirichlet",
+           sprintf("%.0f%% HDI", cred_level * 100),
+           sprintf("Umbral %.2f", threshold)
+         ),
+         col = c(col, adjustcolor(col, 0.5), "darkorange"),
+         lty = c(1, NA, 2),
+         lwd = c(3, NA, 2),
+         pch = c(NA, 15, NA),
+         pt.cex = c(NA, 2, NA),
+         bty = "n", cex = 0.8)
+
+  # Retornar parametros
+  invisible(list(
+    modelo = "Dirichlet-Multinomial",
+    n_jueces = n,
+    n_categories = n_categories,
+    counts = counts,
+    V_clasica = V_classic,
+    V_posterior = V_mean,
+    V_sd = V_sd,
+    post_alpha = post_alpha_vec,
+    HDI = hdi,
+    prob_threshold = prob_threshold,
+    V_samples = V_samples
+  ))
 }

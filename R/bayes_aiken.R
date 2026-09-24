@@ -251,6 +251,44 @@ bayes_aiken <- function(data,
   }
 
   # ==========================================================================
+  # AGREGAR MODEL_INFO
+  # ==========================================================================
+  results$model_info <- list(
+    likelihood = "Binomial(N, theta), donde N = n * k y k = s - l",
+    prior = sprintf("Beta(%.2f, %.2f)", prior_alpha, prior_beta),
+    posterior = "Beta(alpha + S, beta + N - S)",
+    assumptions = c(
+      "Categorias equidistantes en la escala ordinal",
+      "Jueces intercambiables (homogeneos en severidad)",
+      "Independencia condicional de las calificaciones dado theta"
+    ),
+    notes = c(
+      "El modelo trata las calificaciones agregadas como exitos binomiales.",
+      "Los intervalos HDI son mas estrechos que ETI para distribuciones asimetricas.",
+      "P(V > umbral) permite decisiones probabilisticas directas."
+    )
+  )
+
+  # ==========================================================================
+  # VERIFICAR HETEROGENEIDAD (warning automatico)
+  # ==========================================================================
+  heterogeneity_warning <- NULL
+
+  if (!is_dataframe && length(data) >= 3) {
+    # Calcular CV simple entre jueces
+    ratings_norm <- (data - l) / (s - l)
+    cv_judges <- sd(ratings_norm) / mean(ratings_norm)
+
+    if (!is.na(cv_judges) && cv_judges > 0.25) {
+      heterogeneity_warning <- sprintf(
+        "Nota: Se detecta variabilidad moderada-alta entre jueces (CV = %.2f).\n      Los intervalos podrian ser ligeramente optimistas.\n      Use check_judge_heterogeneity() para mas detalles.",
+        cv_judges
+      )
+      results$heterogeneity_warning <- heterogeneity_warning
+    }
+  }
+
+  # ==========================================================================
   # FINALIZAR
   # ==========================================================================
   end_time <- Sys.time()
@@ -261,6 +299,12 @@ bayes_aiken <- function(data,
     verbose_output <- c(verbose_output, capture.output({
       .print_footer(results$metadata$elapsed_time)
     }))
+
+    # Mostrar warning de heterogeneidad si existe
+    if (!is.null(heterogeneity_warning)) {
+      verbose_output <- c(verbose_output, "", heterogeneity_warning, "")
+    }
+
     results$verbose_text <- paste(verbose_output, collapse = "\n")
     cat(results$verbose_text)
   }
