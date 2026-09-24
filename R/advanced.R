@@ -3,7 +3,6 @@
 #' Analisis bayesianos avanzados para validez de contenido
 #'
 #' @author Jose Ventura-Leon
-#' @version 1.0.0
 #' =============================================================================
 
 # =============================================================================
@@ -317,9 +316,10 @@ compare_items <- function(result1, result2,
 
 #' Plot de comparacion de items
 #'
-#' @param comparison Objeto de compare_items
+#' @param x Objeto de compare_items
 #' @param show_rope Mostrar ROPE (default = FALSE)
 #' @param rope Limites del ROPE si show_rope = TRUE
+#' @param ... No se usa.
 #'
 #' @export
 plot.bayes_comparison <- function(x, show_rope = FALSE, rope = c(-0.05, 0.05), ...) {
@@ -976,6 +976,12 @@ plot.bayes_sample_plan <- function(x, ...) {
 #' }
 #'
 #' @examples
+#' # Version breve (pocas simulaciones)
+#' sim <- simulate_judges_planning(true_V = 0.80, n_judges = c(5, 10),
+#'                                 k = 3, n_sim = 100)
+#' print(sim)
+#'
+#' \donttest{
 #' # Replicar Tabla 3 del articulo
 #' sim <- simulate_judges_planning(
 #'   true_V = c(0.80, 0.90),
@@ -983,15 +989,8 @@ plot.bayes_sample_plan <- function(x, ...) {
 #'   k = 3,
 #'   n_sim = 1000
 #' )
-#' print(sim)
 #' plot(sim)
-#'
-#' # Simulacion mas extensa
-#' sim2 <- simulate_judges_planning(
-#'   true_V = seq(0.70, 0.95, by = 0.05),
-#'   n_judges = c(5, 7, 10, 12, 15, 20),
-#'   n_sim = 2000
-#' )
+#' }
 #'
 #' @export
 simulate_judges_planning <- function(true_V = c(0.80, 0.90),
@@ -1347,12 +1346,15 @@ plot.bayes_simulation <- function(x, type = "all", ...) {
 #' Convertir resultados de simulacion a data.frame (formato Tabla 3)
 #'
 #' @param x Objeto bayes_simulation
+#' @param row.names,optional No se usan; se incluyen por compatibilidad con
+#'   el generico \code{as.data.frame}.
 #' @param format Formato de salida: "wide" o "long" (default = "wide")
+#' @param ... No se usa.
 #'
 #' @return Data.frame con resultados formateados
 #'
 #' @examples
-#' sim <- simulate_judges_planning()
+#' sim <- simulate_judges_planning(true_V = 0.80, n_judges = c(5, 10), n_sim = 100)
 #' tabla <- as.data.frame(sim)
 #' print(tabla)
 #'

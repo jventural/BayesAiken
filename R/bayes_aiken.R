@@ -3,7 +3,6 @@
 #' Calcula todos los coeficientes de validez de contenido con enfoque bayesiano
 #'
 #' @author Jose Ventura-Leon
-#' @version 1.0.0
 #' =============================================================================
 
 #' Calcular coeficientes de validez de contenido con intervalos bayesianos

@@ -172,8 +172,10 @@ coef_H <- function(ratings, c = 4,
     }
   }
 
-  # H clasico
-  denominator <- (c - 1) * (n^2 - 1)
+  # H clasico. Aiken (1985, p.140): j = 0 si n es PAR, j = 1 si n es IMPAR.
+  # La v1.0.0 fijaba j = 1, lo que daba un H erroneo con n par.
+  j_par <- if (n %% 2 == 1) 1 else 0
+  denominator <- (c - 1) * (n^2 - j_par)
   H_classic <- 1 - (4 * S) / denominator
 
   # Modelo bayesiano
@@ -414,8 +416,9 @@ coef_C <- function(ratings, l = 0, s = 3,
   S2 <- var(ratings)
   range_scale <- x_high - x_low
 
-  # C clasico
-  d <- 1
+  # C clasico. Aiken (1989, formula 3): d = 0 si n es PAR, d = 1 si n es IMPAR.
+  # La v1.0.0 fijaba d = 1, lo que daba un C erroneo con n par.
+  d <- if (n %% 2 == 0) 0 else 1
   numerator <- 4 * n * (n - 1) * S2
   denominator <- (n^2 - d) * (range_scale^2)
   C_classic <- 1 - numerator / denominator
@@ -547,9 +550,11 @@ coef_A <- function(ratings_judge, ratings_others, c = 4,
     }
   }
 
-  # A clasico
+  # A clasico. Aiken (1985, p.141): A = 1 - S/[(n-1)(c-1)].
+  # S se acumula sobre n_criteria x n_others, de modo que el denominador debe
+  # incluir n_criteria. La v1.0.0 lo omitia y A podia caer por debajo de 0.
   n <- n_others + 1
-  denominator <- (n - 1) * (c - 1)
+  denominator <- (n - 1) * (c - 1) * n_criteria
   A_classic <- 1 - S / denominator
 
   # Modelo bayesiano
@@ -670,7 +675,10 @@ coef_I <- function(ratings_item1, ratings_item2, c = 4,
   ratings_item2 <- ratings_item2[valid]
 
   n_criteria <- length(ratings_item1)
-  m <- 2  # Numero de items
+  # ATENCION: esta funcion compara DOS items entre si. No es la I de Aiken
+  # (1985, p.141), que contrasta un item contra los OTROS m-1 items del test.
+  # Para la I de Aiken use aiken_bayes(otros_items, focal = item, coef = "I").
+  m <- 2
 
   # Calcular S
   S <- sum(abs(ratings_item1 - ratings_item2))

@@ -1,7 +1,9 @@
 #' @keywords internal
 .onAttach <- function(libname, pkgname) {
 
-logo <- "
+  v <- tryCatch(as.character(utils::packageVersion(pkgname)), error = function(e) "?")
+
+  logo <- paste0("
  ======================================================================
 
   ____                            _     _ _
@@ -12,16 +14,15 @@ logo <- "
               |___/
 
  ======================================================================
-             Bayesian Content Validity Coefficients
+   Los seis coeficientes de Aiken con inferencia bayesiana
+   Modelo Dirichlet-Multinomial
  ----------------------------------------------------------------------
+   Dr. Jose Ventura-Leon                            Version ", v, "
 
-                   Desarrollado por:
-                   Dr. Jose Ventura-Leon
-
-                   Version 1.0.0
-
+   Empiece por:   aiken_bayes(c(3,3,2,3,3), coef = \"V\")
+   Interfaz:      run_aiken_app()
  ======================================================================
-"
+")
 
   packageStartupMessage(logo)
 }

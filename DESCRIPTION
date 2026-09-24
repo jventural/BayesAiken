@@ -1,36 +1,40 @@
 Package: BayesAiken
 Type: Package
 Title: Bayesian Content Validity Coefficients with Credibility Intervals
-Version: 1.0.0
-Date: 2024-12-30
+Version: 2.0.0
+Date: 2026-09-24
 Authors@R: person("Jose", "Ventura-Leon",
                   email = "jventuraleon@gmail.com",
                   role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0003-2996-4244"))
-Author: Jose Ventura-Leon [aut, cre] (<https://orcid.org/0000-0003-2996-4244>)
-Maintainer: Jose Ventura-Leon <jventuraleon@gmail.com>
-Description: Calculates Bayesian credibility intervals for content validity
-    coefficients including Aiken's V, H (Homogeneity), R (Reproducibility),
-    C (Consensus), A (Judge Agreement), and I (Inter-item Consistency).
-    Uses Beta-Binomial conjugate model for inference. Provides both classical
-    and Bayesian estimates, HDI and ETI credibility intervals, posterior
-    probabilities of exceeding thresholds (0.70, 0.80), and publication-ready
-    visualizations. Supports both vector input for single items and data.frame
-    input for multiple items with multiple criteria.
+Description: Bayesian inference for the six rating coefficients proposed by
+    Aiken (1985) <doi:10.1177/0013164485451012> and Aiken (1989)
+    <doi:10.1177/0013164489492003>: V (content validity), H (homogeneity),
+    C (congruence), R (repeatability), A (rater agreement) and I (item
+    coherence). All six are expressed as functionals of the population
+    distribution of rating categories, so a single Dirichlet-Multinomial model
+    yields their full posterior by push-forward. This treats each judge as one
+    categorical observation and avoids the pseudo-replication of Beta-Binomial
+    formulations. R is modelled on the c-by-c joint table because it is not a
+    functional of the marginal distribution. Provides classical estimates with
+    the correct parity correction, credibility intervals (HDI and ETI),
+    posterior threshold probabilities, prior sensitivity analysis and a
+    friendly step-by-step verbose report.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends:
     R (>= 4.0.0)
 Imports:
     stats,
     graphics,
-    grDevices
+    grDevices,
+    utils
 Suggests:
     testthat (>= 3.0.0),
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
+    shiny,
+    readxl,
+    writexl,
+    openxlsx
 URL: https://github.com/jventural/BayesAiken
 BugReports: https://github.com/jventural/BayesAiken/issues
