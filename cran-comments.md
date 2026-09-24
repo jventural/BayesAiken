@@ -13,7 +13,9 @@ the significance tests of Aiken (1985).
 
 ## R CMD check results
 
-<RESULTADOS>
+0 errors | 0 warnings | 1 note
+
+* This is a new submission.
 
 ## Notes for the reviewer
 

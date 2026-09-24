@@ -17,9 +17,9 @@ Description: Bayesian inference for the six rating coefficients proposed by
     categorical observation and avoids the pseudo-replication of Beta-Binomial
     formulations. R is modelled on the c-by-c joint table because it is not a
     functional of the marginal distribution. Provides classical estimates with
-    the correct parity correction, credibility intervals (HDI and ETI),
-    posterior threshold probabilities, prior sensitivity analysis and a
-    friendly step-by-step verbose report.
+    the correct parity correction, highest density and equal-tailed
+    credibility intervals, posterior threshold probabilities, prior
+    sensitivity analysis and a friendly step-by-step verbose report.
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.2
